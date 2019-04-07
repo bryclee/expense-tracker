@@ -1,1 +1,4 @@
 node_modules/
+build/
+client_id.json
+.env

@@ -21,3 +21,4 @@
 - [Google Client-Side Signin Reference](https://developers.google.com/identity/sign-in/web/reference)
 - [Google Server Auth](https://developers.google.com/identity/sign-in/web/server-side-flow)
 - [Sheets API Reference](https://developers.google.com/sheets/api/guides/concepts)
+- [OAuth Docs](https://auth0.com/docs/flows/concepts/regular-web-app-login-flow#how-to-implement-it)

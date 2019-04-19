@@ -1,16 +1,15 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import * as path from 'path';
+import { headerAuthMiddleware } from './auth';
+
 const app = express();
 const PORT = process.env.PORT || 8000;
 const isProd = process.env.NODE_ENV === 'production';
 
-const { api: apiAuth } = require('./auth');
-
-// const googleAuth = require('./auth');
-// app.use(googleAuth);
+// import { googleRedirectMiddleware } from './auth';
 
 app.use(express.static(path.join(process.cwd(), isProd ? 'build' : 'public')));
-app.use('/api', apiAuth, (req, res, next) => {
+app.use('/api', headerAuthMiddleware, (req, res, next) => {
     res.status(200).send('Success');
 });
 app.use((error, req, res, next) => {

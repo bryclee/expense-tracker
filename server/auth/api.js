@@ -1,5 +1,7 @@
-const { GOOGLE_AUTH_HEADER } = require('../../shared/constants');
-const oauth2Client = require('./google').getOAuthClient();
+import { GOOGLE_AUTH_HEADER } from '../../shared/constants';
+import { getOAuthClient } from './google';
+
+const oauth2Client = getOAuthClient();
 
 async function verifyIdToken(idToken) {
   const ticket = await oauth2Client.verifyIdToken({
@@ -11,7 +13,7 @@ async function verifyIdToken(idToken) {
   return payload;
 }
 
-module.exports = async (req, res, next) => {
+export const headerAuthMiddleware = async (req, res, next) => {
   console.log(req.headers);
 
   if (!req.headers[GOOGLE_AUTH_HEADER]) {

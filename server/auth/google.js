@@ -1,5 +1,5 @@
-const { google } = require('googleapis');
-const { GOOGLE_SCOPES } = require('../../shared/constants');
+import { google } from 'googleapis';
+import { GOOGLE_SCOPES } from '../../shared/constants';
 
 const { clientId, clientSecret, redirectUrl } = {
   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -20,7 +20,7 @@ const authUrl = oauth2Client.generateAuthUrl({
   scope: GOOGLE_SCOPES
 });
 
-module.exports = (req, res, next) => {
+export const googleRedirectMiddleware = (req, res, next) => {
   // do some google auth
   if (!req.query.code) {
     return res.redirect(authUrl);
@@ -29,4 +29,4 @@ module.exports = (req, res, next) => {
   next();
 };
 
-module.exports.getOAuthClient = () => oauth2Client;
+export const getOAuthClient = () => oauth2Client;

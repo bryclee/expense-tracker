@@ -11,10 +11,12 @@
   },
   "scripts": {
     "client": "PORT=${CLIENT_PORT} react-scripts start",
-    "server": "nodemon -i public,src server/index.js",
+    "server": "nodemon -w server,shared --exec 'ts-node --project tsconfig.server.json' server/index.ts",
     "dev": "PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
-    "start": "node index.js",
-    "build": "react-scripts build",
+    "start": "node .build/server/index.js",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "react-scripts build",
+    "build:server": "tsc --project tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -38,6 +40,7 @@
     "concurrently": "^4.1.0",
     "http-proxy-middleware": "^0.19.1",
     "nodemon": "^1.18.11",
+    "ts-node": "^8.1.0",
     "typescript": "^3.3.1"
   },
   "prettier": {

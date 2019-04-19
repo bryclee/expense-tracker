@@ -10,13 +10,23 @@ const isProd = process.env.NODE_ENV === 'production';
 
 app.use(express.static(path.join(process.cwd(), isProd ? 'build' : 'public')));
 app.use('/api', headerAuthMiddleware, (req, res, next) => {
-    res.status(200).send('Success');
+  res.status(200).send('Success');
 });
 app.use((error, req, res, next) => {
-    console.error('Request failed with error:', error);
-    res.status(500).send('Error');
+  console.error('Request failed with error:', error);
+  res.status(500).send('Error');
 });
 
 const server = app.listen(PORT, () => {
-    console.log(`Server started and listening on ${server.address().address}:${server.address().port}`);
+  const serverAddress = server.address();
+  let address, port;
+
+  if (typeof serverAddress === 'string') {
+    port = PORT;
+  } else {
+    address = serverAddress.address;
+    port = serverAddress.port;
+  }
+
+  console.log(`Server started and listening on ${address}:${port}`);
 });

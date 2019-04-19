@@ -11,7 +11,7 @@
   },
   "scripts": {
     "client": "PORT=${CLIENT_PORT} react-scripts start",
-    "server": "nodemon -w server,shared --exec 'ts-node --project tsconfig.server.json' server/index.ts",
+    "server": "nodemon --exec 'ts-node --project tsconfig.server.json' server/index.ts",
     "dev": "PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
     "start": "node .build/server/index.js",
     "build": "npm run build:client && npm run build:server",
@@ -31,6 +31,7 @@
   ],
   "proxy": "http://localhost:8000/",
   "devDependencies": {
+    "@types/express": "^4.16.1",
     "@types/gapi": "0.0.36",
     "@types/gapi.auth2": "0.0.50",
     "@types/jest": "^24.0.5",

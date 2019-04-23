@@ -11,8 +11,8 @@
   },
   "scripts": {
     "client": "PORT=${CLIENT_PORT} react-scripts start",
-    "server": "nodemon --exec 'ts-node --project tsconfig.server.json' server/index.ts",
-    "dev": "PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
+    "server": "nodemon --watch server --watch shared --exec 'ts-node --files --project tsconfig.server.json' server/index.ts",
+    "dev": "PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
     "start": "node .build/server/index.js",
     "build": "npm run build:client && npm run build:server",
     "build:client": "react-scripts build",

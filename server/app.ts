@@ -6,7 +6,7 @@ import { entriesApis } from './apis';
 const app = express();
 const isProd = process.env.NODE_ENV === 'production';
 
-// import { googleRedirectMiddleware } from './auth';
+import { googleRedirectMiddleware } from './auth';
 
 app.use(express.static(path.join(process.cwd(), isProd ? 'build' : 'public')));
 app.use('/api', headerAuthMiddleware, entriesApis());

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './index.module.css';
 
-interface AuthState {
+export interface AuthState {
   loggedIn: boolean;
   idToken?: string;
+  accessToken?: string;
 }
 
 function renderGoogleSignin(ref) {
@@ -20,7 +21,7 @@ function listenForAuthChanges(cb) {
   gapi.auth2.getAuthInstance().isSignedIn.listen(cb);
 }
 
-function checkGoogleAuth(): AuthState {
+function getGoogleAuthState(): AuthState {
   const authResponse = gapi.auth2
     .getAuthInstance()
     .currentUser.get()
@@ -30,10 +31,12 @@ function checkGoogleAuth(): AuthState {
   if (!loggedIn) return { loggedIn };
 
   const idToken = authResponse.id_token;
+  const accessToken = authResponse.access_token;
 
   return {
     loggedIn,
-    idToken
+    idToken,
+    accessToken
   };
 }
 
@@ -41,10 +44,13 @@ export interface GoogleSigninProps {
   updateAuth: (auth: AuthState) => void;
 }
 
-const GoogleSignin = (props: GoogleSigninProps) => {
+const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   const [gapiLoaded, setGapiLoaded] = useState<boolean>(false);
-  const [authState, setAuthState] = useState<AuthState>({ loggedIn: false });
   const signinButton = useRef(null);
+
+  const handleAuthChange = (auth: AuthState) => {
+    updateAuth(auth);
+  };
 
   useEffect(() => {
     if (!gapiLoaded) {
@@ -52,8 +58,11 @@ const GoogleSignin = (props: GoogleSigninProps) => {
     }
 
     renderGoogleSignin(signinButton.current).then(() => {
-      setAuthState(checkGoogleAuth());
-      listenForAuthChanges(auth => setAuthState(checkGoogleAuth()));
+      handleAuthChange(getGoogleAuthState());
+
+      listenForAuthChanges(() => {
+        handleAuthChange(getGoogleAuthState());
+      });
     });
   }, [gapiLoaded]);
 
@@ -66,8 +75,8 @@ const GoogleSignin = (props: GoogleSigninProps) => {
   }
 
   return (
-    <div className={styles.googleSignin} ref={signinButton}>
-      {authState && authState.idToken}
+    <div className={styles.googleSigninContainer}>
+      <div className={styles.googleSignin} ref={signinButton} />
     </div>
   );
 };

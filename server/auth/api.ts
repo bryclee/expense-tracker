@@ -1,6 +1,6 @@
 import { GOOGLE_AUTH_HEADER, GOOGLE_AT_HEADER } from '../../shared/constants';
 import { getOAuthClient } from './google';
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { RequestHandler } from 'express';
 
 const oauth2Client = getOAuthClient();
 

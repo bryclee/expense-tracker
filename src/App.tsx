@@ -1,39 +1,27 @@
-import React, { Component } from 'react';
-import GoogleSignin from './GoogleSignin';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import GoogleSignin, { AuthState } from './GoogleSignin';
+import Pre from './common/Pre';
+import Entries from './Entries';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { auth: {} };
-  }
-
-  updateAuth(auth) {
-    this.setState({ auth });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <GoogleSignin updateAuth={this.updateAuth} />
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+interface AppState {
+  auth: AuthState;
 }
+
+const App = () => {
+  const [state, updateState] = useState<AppState>({
+    auth: { loggedIn: false }
+  });
+  const { auth } = state;
+
+  const updateAuth = (auth: AuthState) => updateState({ auth });
+
+  return (
+    <div className="App">
+      <GoogleSignin updateAuth={updateAuth} />
+      {auth.loggedIn ? <Entries /> : <div>not logged in</div>}
+      <Pre>Auth state: {JSON.stringify(auth, null, 2)}</Pre>
+    </div>
+  );
+};
 
 export default App;

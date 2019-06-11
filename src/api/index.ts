@@ -1,7 +1,9 @@
+import { GOOGLE_AT_HEADER, GOOGLE_AUTH_HEADER } from '../../shared/constants';
 import { ApiError } from './ApiError';
 
 interface ApiContext {
   accessToken?: string;
+  idToken?: string;
 }
 
 interface Spreadsheet {
@@ -16,15 +18,19 @@ interface Entry {
   date: string;
 }
 
-const apiContext: ApiContext = {
-  accessToken: null
+let apiContext: ApiContext = {
+  accessToken: null,
+  idToken: null
 };
 
 /**
- * Set the access token for use for all API calls
+ * Set api context variables like the access token for use for all API calls
  */
-export function setAccessToken(token: string): void {
-  apiContext.accessToken = token;
+export function setApiContext(context: ApiContext): void {
+  apiContext = {
+    ...apiContext,
+    ...context
+  };
 }
 
 /**
@@ -37,7 +43,8 @@ function buildRequestOptions({
   return {
     ...options,
     headers: {
-      accessToken: apiContext.accessToken,
+      [GOOGLE_AT_HEADER]: apiContext.accessToken,
+      [GOOGLE_AUTH_HEADER]: apiContext.idToken,
       ...headers
     }
   };

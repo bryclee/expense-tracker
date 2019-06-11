@@ -1,1 +1,1 @@
-export { entriesApis } from './entries';
+export { spreadsheetsApi } from './spreadsheets';

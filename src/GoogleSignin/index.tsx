@@ -7,9 +7,10 @@ export interface AuthState {
   accessToken?: string;
 }
 
-function renderGoogleSignin(ref) {
+function renderGoogleSignin(ref: HTMLElement) {
   return new Promise((resolve, reject) => {
     gapi.signin2.render(ref, {
+      // TODO: Use shared constant for this value
       scope: 'email https://www.googleapis.com/auth/spreadsheets',
       onsuccess: resolve,
       onfailure: reject
@@ -17,7 +18,7 @@ function renderGoogleSignin(ref) {
   });
 }
 
-function listenForAuthChanges(cb) {
+function listenForAuthChanges(cb: () => void) {
   gapi.auth2.getAuthInstance().isSignedIn.listen(cb);
 }
 
@@ -46,7 +47,7 @@ export interface GoogleSigninProps {
 
 const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   const [gapiLoaded, setGapiLoaded] = useState<boolean>(false);
-  const signinButton = useRef(null);
+  const signinButton = useRef<HTMLDivElement>(null);
 
   const handleAuthChange = (auth: AuthState) => {
     updateAuth(auth);

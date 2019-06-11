@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import GoogleSignin, { AuthState } from './GoogleSignin';
 import Pre from './common/Pre';
 import Entries from './Entries';
-import { setAccessToken } from './api';
+import { setApiContext } from './api';
 
 interface AppState {
   auth: AuthState;
@@ -16,7 +16,11 @@ const App = () => {
 
   const updateAuth = (auth: AuthState) => {
     updateState({ auth });
-    setAccessToken(auth.loggedIn ? auth.accessToken : null);
+    setApiContext(
+      auth.loggedIn
+        ? { accessToken: auth.accessToken, idToken: auth.idToken }
+        : null
+    );
   };
 
   return (

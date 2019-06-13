@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import cn from 'classnames';
 import styles from './index.module.css';
 
 export interface AuthState {
@@ -47,9 +48,11 @@ export interface GoogleSigninProps {
 
 const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   const [gapiLoaded, setGapiLoaded] = useState<boolean>(false);
+  const [authState, setAuthState] = useState<AuthState>({ loggedIn: false });
   const signinButton = useRef<HTMLDivElement>(null);
 
   const handleAuthChange = (auth: AuthState) => {
+    setAuthState(auth);
     updateAuth(auth);
   };
 
@@ -76,8 +79,14 @@ const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   }
 
   return (
-    <div className={styles.googleSigninContainer}>
-      <div className={styles.googleSignin} ref={signinButton} />
+    <div className={cn(styles.googleSigninContainer)}>
+      <div
+        className={cn({
+          [styles.googleSignin]: true,
+          [styles.signedIn]: authState.loggedIn
+        })}
+        ref={signinButton}
+      />
     </div>
   );
 };

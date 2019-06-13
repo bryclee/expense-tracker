@@ -1,4 +1,4 @@
-import { GOOGLE_AT_HEADER, GOOGLE_AUTH_HEADER } from '../../shared/constants';
+import { GOOGLE_AT_HEADER, GOOGLE_AUTH_HEADER } from '../constants';
 import { ApiError } from './ApiError';
 
 interface ApiContext {

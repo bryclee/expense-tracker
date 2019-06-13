@@ -22,7 +22,6 @@
   "include": [
     "src",
     "shared",
-    // server is only included to edit the server with types properly
     "server"
   ]
 }

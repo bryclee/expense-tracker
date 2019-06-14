@@ -6,18 +6,6 @@ interface ApiContext {
   idToken?: string;
 }
 
-interface Spreadsheet {
-  name: string;
-  id: string;
-}
-
-interface Entry {
-  name: string;
-  category: string;
-  amount: string;
-  date: string;
-}
-
 let apiContext: ApiContext = {
   accessToken: null,
   idToken: null

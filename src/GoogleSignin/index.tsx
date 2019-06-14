@@ -79,7 +79,9 @@ const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   }
 
   return (
-    <div className={cn(styles.googleSigninContainer)}>
+    <div
+      className={cn(styles.googleSigninContainer)}
+    >
       <div
         className={cn({
           [styles.googleSignin]: true,

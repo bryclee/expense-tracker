@@ -6,5 +6,5 @@
     "noEmit": false,
     "rootDirs": ["./server", "./shared"]
   },
-  "include": ["server", "shared"]
+  "include": ["server", "shared", "interfaces.d.ts"]
 }

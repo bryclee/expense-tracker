@@ -1,3 +1,4 @@
+/* eslint-disable */
 var START_ROW = 2;
 var START_COL = 1;
 var NUM_COLS = 3;

@@ -11,15 +11,16 @@
     "react-scripts": "2.1.8"
   },
   "scripts": {
-    "client": "PORT=${PORT:-$CLIENT_PORT} react-scripts start",
-    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'TS_NODE_PROJECT=tsconfig.server.json TS_NODE_FILES=true node -r ts-node/register server/index.ts'",
-    "dev": "SERVER_PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
-    "start": "node .build/server/index.js",
     "build": "npm run build:client && npm run build:server",
     "build:client": "react-scripts build",
     "build:server": "tsc --project tsconfig.server.json",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "client": "PORT=${PORT:-$CLIENT_PORT} react-scripts start",
+    "dev": "SERVER_PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged",
+    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'TS_NODE_PROJECT=tsconfig.server.json TS_NODE_FILES=true node -r ts-node/register server/index.ts'",
+    "start": "node .build/server/index.js",
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,6 +49,13 @@
   },
   "prettier": {
     "tabWidth": 2,
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": true,
+    "semi": false
+  },
+  "lint-staged": {
+    "**/*.js": [ 
+      "prettier --write"
+    ]
   }
 }

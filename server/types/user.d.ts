@@ -1,4 +1,4 @@
 interface User {
-  accountNumber: string;
-  accessToken?: string;
+  accountNumber: string
+  accessToken?: string
 }

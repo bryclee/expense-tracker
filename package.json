@@ -17,7 +17,7 @@
     "client": "PORT=${PORT:-$CLIENT_PORT} react-scripts start",
     "dev": "SERVER_PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
     "eject": "react-scripts eject",
-    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'TS_NODE_PROJECT=tsconfig.server.json TS_NODE_FILES=true node -r ts-node/register server/index.ts'",
+    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'npm run build:server && npm start'",
     "start": "node .build/server/index.js",
     "test": "react-scripts test"
   },

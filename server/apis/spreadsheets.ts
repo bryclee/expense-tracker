@@ -2,6 +2,8 @@ import express, { RequestHandler, Request, Response } from 'express'
 import { google } from 'googleapis'
 import { getCredentials } from '../env'
 
+const EXPENSE_TRACKER_SHEET_NAME = 'Hello Expense Tracker'
+
 const accessTokenCheck: RequestHandler = function(req, res, next) {
   if (!req.user.accessToken) {
     res.status(401).send('Missing access token in header')
@@ -9,7 +11,6 @@ const accessTokenCheck: RequestHandler = function(req, res, next) {
 
   next()
 }
-console.log()
 
 const getGoogleAuth = function(accessToken) {
   const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = getCredentials()
@@ -35,13 +36,12 @@ const getSpreadsheetsHandler: RequestHandler = async function(
   res: Response,
 ) {
   const api = getGoogleSheetsApi(req)
+  const spreadsheetId = '1wK84gYENgkfeH08nhhJdXq-We2TdUePvzLL8bs7dma0'
   const { data } = await api.spreadsheets.get({
-    spreadsheetId: '1wK84gYENgkfeH08nhhJdXq-We2TdUePvzLL8bs7dma0',
+    spreadsheetId,
   })
   // TODO: Return this value
   const { sheets } = data
-
-
 
   const sampleResponse = [
     {
@@ -49,6 +49,20 @@ const getSpreadsheetsHandler: RequestHandler = async function(
       name: 'spreadsheet name 1',
     },
   ]
+
+  const trackerSheet = sheets.find(sheet =>
+    sheet.properties.title.includes(EXPENSE_TRACKER_SHEET_NAME),
+  )
+
+  if (!trackerSheet) {
+    return res
+      .status(404)
+      .send(
+        `Sheet ${spreadsheetId} does not contain Hello Expense Tracker data`,
+      )
+  }
+
+  const sheetId = trackerSheet.properties.sheetId
 
   res.send(<SpreadsheetsResponse>sampleResponse)
 }

@@ -22,3 +22,12 @@
 - [Google Server Auth](https://developers.google.com/identity/sign-in/web/server-side-flow)
 - [Sheets API Reference](https://developers.google.com/sheets/api/guides/concepts)
 - [OAuth Docs](https://auth0.com/docs/flows/concepts/regular-web-app-login-flow#how-to-implement-it)
+
+## Todos
+
+- [ ] Complete Add Entry
+- [ ] Complete Delete Entry
+- [ ] Start using Developer Metadata to find spreadsheets
+- [ ] Source `.serverenv` for dev mode only
+- [ ] Styling
+- [ ] Service worker for offline

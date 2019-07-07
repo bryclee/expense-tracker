@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "googleapis": "^39.2.0",
     "react": "^16.8.6",
@@ -17,7 +18,7 @@
     "client": "PORT=${PORT:-$CLIENT_PORT} react-scripts start",
     "dev": "SERVER_PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
     "eject": "react-scripts eject",
-    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'npm run build:server && npm start'",
+    "server": "PORT=${PORT:-$SERVER_PORT} nodemon --watch server --watch shared --ext ts --exec 'npm run build:server && NODE_ENV=development npm start'",
     "start": "node .build/server/index.js",
     "test": "react-scripts test"
   },
@@ -51,8 +52,7 @@
   "prettier": {
     "tabWidth": 2,
     "singleQuote": true,
-    "trailingComma": "all",
-    "semi": false
+    "trailingComma": "all"
   },
   "husky": {
     "hooks": {
@@ -65,7 +65,11 @@
         "prettier --write",
         "git add"
       ],
-      "**/*.json": [ 
+      "**/*.css": [
+        "prettier --write",
+        "git add"
+      ],
+      "**/*.json": [
         "prettier --write",
         "git add"
       ]

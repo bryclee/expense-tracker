@@ -15,6 +15,8 @@ REACT_APP_GOOGLE_CLIENT_ID=<google client id>
 CLIENT_ID=<google client id>
 CLIENT_SECRET=<google client secret>
 REDIRECT_URI=<google redirect URI>
+
+SPREADSHEET_ID=<hard-coded spreadsheet ID>
 ```
 
 1. Start the app in dev mode using `npm run dev`

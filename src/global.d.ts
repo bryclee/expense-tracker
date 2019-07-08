@@ -1,1 +1,1 @@
-declare var gapiScriptLoaded: Promise<void>
+declare var gapiScriptLoaded: Promise<void>;

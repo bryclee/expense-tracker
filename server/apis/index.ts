@@ -1,1 +1,1 @@
-export { spreadsheetsApi } from './spreadsheets'
+export { spreadsheetsApi } from './spreadsheets';

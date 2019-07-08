@@ -1,6 +1,6 @@
-import React from 'react'
-import styles from './Pre.module.css'
+import React from 'react';
+import styles from './Pre.module.css';
 
-const Pre = props => <pre className={styles.pre} {...props} />
+const Pre = props => <pre className={styles.pre} {...props} />;
 
-export default Pre
+export default Pre;

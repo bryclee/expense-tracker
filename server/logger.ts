@@ -1,11 +1,11 @@
 export default {
   info(...args: any[]) {
-    console.log(...args)
+    console.log(...args);
   },
   warn(...args: any[]) {
-    console.warn(...args)
+    console.warn(...args);
   },
   error(...args: any[]) {
-    console.error(...args)
+    console.error(...args);
   },
-}
+};

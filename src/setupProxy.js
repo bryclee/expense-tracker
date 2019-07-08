@@ -4,5 +4,9 @@ const proxy = require('http-proxy-middleware');
 
 module.exports = function(app) {
   console.log('Setting up dev proxy on /api');
-  app.use(proxy('/api', { target: `http://localhost:${process.env.SERVER_PORT || 8000}` }));
-}
+  app.use(
+    proxy('/api', {
+      target: `http://localhost:${process.env.SERVER_PORT || 8000}`,
+    }),
+  );
+};

@@ -1,2 +1,2 @@
-export * from './api'
-export * from './google'
+export * from './api';
+export * from './google';

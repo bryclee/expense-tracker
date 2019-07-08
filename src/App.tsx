@@ -3,6 +3,7 @@ import { AuthState } from './GoogleSignin';
 import Nav, { Page } from './Nav';
 import Entries from './Entries';
 import { setApiContext } from './api';
+import AddForm from './AddForm';
 
 interface AppState {
   auth: AuthState;
@@ -37,7 +38,7 @@ const App = () => {
         updatePage={updatePage}
       ></Nav>
       {auth.loggedIn && page === Page.Entries ? <Entries /> : null}
-      {auth.loggedIn && page === Page.Add ? <div>Add</div> : null}
+      {auth.loggedIn && page === Page.Add ? <AddForm /> : null}
     </div>
   );
 };

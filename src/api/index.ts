@@ -33,6 +33,7 @@ function buildRequestOptions({
     headers: {
       [GOOGLE_AT_HEADER]: apiContext.accessToken,
       [GOOGLE_AUTH_HEADER]: apiContext.idToken,
+      'content-type': 'application/json',
       ...headers,
     },
   };
@@ -44,7 +45,16 @@ async function requestToServer<T>(
 ): Promise<T> {
   const apiOptions = buildRequestOptions(options);
   const res = await fetch(uri, apiOptions);
-  const data = await res.json();
+  let rawData;
+  let data;
+
+  try {
+    rawData = await res.text();
+    data = JSON.parse(rawData);
+  } catch (err) {
+    data = {};
+    // noop
+  }
 
   if (res.status !== 200) {
     throw new ApiError(data.message || res.status, {
@@ -62,4 +72,14 @@ export async function getSpreadsheets(): Promise<Spreadsheet[]> {
 
 export async function getEntries(id: string): Promise<Entry[]> {
   return requestToServer<Entry[]>(`/api/spreadsheets/${id}/entries`);
+}
+
+export async function addEntry(
+  id: string,
+  payload: AddEntryPayload,
+): Promise<void> {
+  return requestToServer<void>(`/api/spreadsheets/${id}/entries`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
 }

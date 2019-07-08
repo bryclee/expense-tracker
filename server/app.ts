@@ -1,4 +1,5 @@
 import express, { RequestHandler, ErrorRequestHandler } from 'express';
+import bodyParser from 'body-parser';
 import * as path from 'path';
 import { headerAuthMiddleware } from './auth';
 import { spreadsheetsApi } from './apis';
@@ -10,7 +11,7 @@ const isProd = process.env.NODE_ENV === 'production';
 // import { googleRedirectMiddleware } from './auth';
 
 const requestLogger: RequestHandler = function(req, _res, next) {
-  logger.info(`[Request: ${req.originalUrl}]`);
+  logger.info(`[Request: ${req.method} -> ${req.originalUrl}]`);
   next();
 };
 
@@ -27,6 +28,7 @@ const errorHandler: ErrorRequestHandler = function(err, req, res) {
 };
 
 app.use(express.static(path.join(process.cwd(), isProd ? 'build' : 'public')));
+app.use(bodyParser.json());
 app.use(requestLogger);
 app.use('/api', headerAuthMiddleware, spreadsheetsApi());
 app.use(notFoundHandler);

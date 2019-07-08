@@ -36,7 +36,7 @@ function mapEntry({ id, name, date, category, amount }: Entry): EntryDisplay {
 }
 
 const Entries = () => {
-  const [entries, updateEntries] = useState<Entry[]>([]);
+  const [entries, setEntries] = useState<EntryDisplay[]>([]);
   const [loading, setLoading] = useState<Boolean>(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const Entries = () => {
       .then(entries => {
         if (mounted) {
           setLoading(false);
-          updateEntries(entries);
+          setEntries(entries.map(mapEntry));
         }
       })
       .catch(err => {

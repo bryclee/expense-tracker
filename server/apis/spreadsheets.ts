@@ -1,5 +1,5 @@
 import express, { RequestHandler, Request } from 'express';
-import { google } from 'googleapis';
+import { google, sheets_v4 } from 'googleapis';
 import { getCredentials } from '../env';
 
 const EXPENSE_TRACKER_SHEET_NAME = 'Hello Expense Tracker';
@@ -8,6 +8,11 @@ const DATE_COL = 0;
 const NAME_COL = 1;
 const CATEGORY_COL = 2;
 const AMOUNT_COL = 3;
+const NUM_COLS = 4;
+
+// These are 0-indexed
+const START_ROW = 1;
+const START_COL = 0;
 
 const accessTokenCheck: RequestHandler = function(req, res, next) {
   if (!req.user.accessToken) {
@@ -30,10 +35,26 @@ const getGoogleAuth = function(accessToken) {
   return oauth2Client;
 };
 
-const getGoogleSheetsApi = function(req: Request) {
+const getGoogleSheetsApi = function(req: Request): sheets_v4.Sheets {
   const auth = getGoogleAuth(req.user.accessToken);
 
   return google.sheets({ version: 'v4', auth });
+};
+
+const getSheetFromSpreadsheetId = async function(
+  api: sheets_v4.Sheets,
+  spreadsheetId: string,
+): Promise<sheets_v4.Schema$Sheet | null> {
+  const { data } = await api.spreadsheets.get({
+    spreadsheetId,
+  });
+  const { sheets } = data;
+
+  const trackerSheet = sheets.find(sheet =>
+    sheet.properties.title.includes(EXPENSE_TRACKER_SHEET_NAME),
+  );
+
+  return trackerSheet || null;
 };
 
 const getSpreadsheetsHandler: RequestHandler = async function(req, res) {
@@ -60,7 +81,6 @@ const getSpreadsheetsHandler: RequestHandler = async function(req, res) {
       );
   }
 
-  const sheetId = trackerSheet.properties.sheetId;
   const result = [
     {
       id: spreadsheetId,
@@ -74,15 +94,7 @@ const getSpreadsheetsHandler: RequestHandler = async function(req, res) {
 const getEntriesHandler: RequestHandler = async function(req, res) {
   const { spreadsheetId } = req.params;
   const api = getGoogleSheetsApi(req);
-  const { data } = await api.spreadsheets.get({
-    spreadsheetId,
-  });
-
-  const { sheets } = data;
-
-  const trackerSheet = sheets.find(sheet =>
-    sheet.properties.title.includes(EXPENSE_TRACKER_SHEET_NAME),
-  );
+  const trackerSheet = await getSheetFromSpreadsheetId(api, spreadsheetId);
 
   if (!trackerSheet) {
     return res
@@ -112,7 +124,59 @@ const getEntriesHandler: RequestHandler = async function(req, res) {
   res.send(<EntriesResponse>result);
 };
 
-const addEntryHandler: RequestHandler = async function(req, res) {};
+function formatCellValues(values: string[]): sheets_v4.Schema$CellData[] {
+  return values.map(value => {
+    return {
+      userEnteredValue: {
+        stringValue: value,
+      },
+    };
+  });
+}
+
+const addEntryHandler: RequestHandler = async function(req, res) {
+  const { spreadsheetId } = req.params;
+  const api = getGoogleSheetsApi(req);
+  const payload: AddEntryPayload = req.body;
+  const { date, name, amount, category } = payload;
+  const trackerSheet = await getSheetFromSpreadsheetId(api, spreadsheetId);
+  const { sheetId } = trackerSheet.properties;
+  const values = formatCellValues([date, name, category, amount]);
+  const range = {
+    sheetId,
+    startRowIndex: START_ROW,
+    startColumnIndex: START_COL,
+    endRowIndex: START_ROW + 1,
+    endColumnIndex: START_COL + NUM_COLS,
+  };
+
+  await api.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: [
+        {
+          insertRange: {
+            range,
+            shiftDimension: 'ROWS',
+          },
+        },
+        {
+          updateCells: {
+            rows: [
+              {
+                values,
+              },
+            ],
+            fields: '*',
+            range,
+          },
+        },
+      ],
+    },
+  });
+
+  res.status(200).end();
+};
 
 export function spreadsheetsApi() {
   const router = express.Router();
@@ -120,7 +184,7 @@ export function spreadsheetsApi() {
   router.use(accessTokenCheck);
   router.get('/spreadsheets', getSpreadsheetsHandler);
   router.get('/spreadsheets/:spreadsheetId/entries', getEntriesHandler);
-  router.post('/spreadsheet/:spreadsheetId/entries', addEntryHandler);
+  router.post('/spreadsheets/:spreadsheetId/entries', addEntryHandler);
 
   return router;
 }

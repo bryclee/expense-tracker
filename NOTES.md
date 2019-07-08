@@ -26,6 +26,8 @@
 ## Todos
 
 - [ ] Complete Add Entry
+  - [ ] Plug in actual form data
+  - [ ] Figure out formatting cell during insert
 - [ ] Complete Delete Entry
 - [ ] Start using Developer Metadata to find spreadsheets
 - [ ] Source `.serverenv` for dev mode only

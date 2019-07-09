@@ -17,6 +17,6 @@ type Entry = {
 type AddEntryPayload = {
   date: string;
   name: string;
-  amount: string;
+  amount: number;
   category: string;
 };

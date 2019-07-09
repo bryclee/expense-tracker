@@ -13,7 +13,7 @@ interface AppState {
 const App = () => {
   const [appState, updateAppState] = useState<AppState>({
     auth: { loggedIn: false },
-    page: Page.Entries,
+    page: Page.Add,
   });
   const { auth, page } = appState;
 

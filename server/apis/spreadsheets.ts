@@ -1,6 +1,8 @@
 import express, { RequestHandler, Request } from 'express';
 import { google, sheets_v4 } from 'googleapis';
 import { getCredentials } from '../env';
+import asyncMiddleware from '../lib/asyncMiddleware';
+import { formatDateForSheets } from '../lib/google';
 
 const EXPENSE_TRACKER_SHEET_NAME = 'Hello Expense Tracker';
 
@@ -124,16 +126,6 @@ const getEntriesHandler: RequestHandler = async function(req, res) {
   res.send(<EntriesResponse>result);
 };
 
-function formatCellValues(values: string[]): sheets_v4.Schema$CellData[] {
-  return values.map(value => {
-    return {
-      userEnteredValue: {
-        stringValue: value,
-      },
-    };
-  });
-}
-
 const addEntryHandler: RequestHandler = async function(req, res) {
   const { spreadsheetId } = req.params;
   const api = getGoogleSheetsApi(req);
@@ -141,7 +133,6 @@ const addEntryHandler: RequestHandler = async function(req, res) {
   const { date, name, amount, category } = payload;
   const trackerSheet = await getSheetFromSpreadsheetId(api, spreadsheetId);
   const { sheetId } = trackerSheet.properties;
-  const values = formatCellValues([date, name, category, amount]);
   const range = {
     sheetId,
     startRowIndex: START_ROW,
@@ -164,7 +155,44 @@ const addEntryHandler: RequestHandler = async function(req, res) {
           updateCells: {
             rows: [
               {
-                values,
+                values: [
+                  // {
+                  //   userEnteredValue: {
+                  //     // FIXME: date should be a number representing number of days since Dec 30, 1990
+                  //     numberValue: formatDateForSheets(date),
+                  //   },
+                  //   userEnteredFormat: {
+                  //     numberFormat: { type: 'DATE', pattern: 'mm/dd/yyy' },
+                  //     horizontalAlignment: 'RIGHT',
+                  //   },
+                  // },
+                  {
+                    userEnteredValue: {
+                      stringValue: name,
+                    },
+                    userEnteredFormat: {
+                      horizontalAlignment: 'LEFT',
+                    },
+                  },
+                  {
+                    userEnteredValue: {
+                      stringValue: category,
+                    },
+                    userEnteredFormat: {
+                      horizontalAlignment: 'RIGHT',
+                    },
+                  },
+                  // {
+                  //   userEnteredValue: {
+                  //     // FIXME: amount should be number
+                  //     numberValue: amount,
+                  //   },
+                  //   userEnteredFormat: {
+                  //     numberFormat: { type: 'NUMBER', pattern: '####.00' },
+                  //     horizontalAlignment: 'RIGHT',
+                  //   },
+                  // },
+                ],
               },
             ],
             fields: '*',
@@ -182,9 +210,15 @@ export function spreadsheetsApi() {
   const router = express.Router();
 
   router.use(accessTokenCheck);
-  router.get('/spreadsheets', getSpreadsheetsHandler);
-  router.get('/spreadsheets/:spreadsheetId/entries', getEntriesHandler);
-  router.post('/spreadsheets/:spreadsheetId/entries', addEntryHandler);
+  router.get('/spreadsheets', asyncMiddleware(getSpreadsheetsHandler));
+  router.get(
+    '/spreadsheets/:spreadsheetId/entries',
+    asyncMiddleware(getEntriesHandler),
+  );
+  router.post(
+    '/spreadsheets/:spreadsheetId/entries',
+    asyncMiddleware(addEntryHandler),
+  );
 
   return router;
 }

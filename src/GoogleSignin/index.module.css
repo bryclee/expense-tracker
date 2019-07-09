@@ -6,7 +6,7 @@
 
 .googleSignin {
   display: inline-block;
-  transition: transform 1s;
+  transition: transform 0.4s;
 }
 
 .signedIn {

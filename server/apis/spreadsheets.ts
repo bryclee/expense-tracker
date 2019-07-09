@@ -156,16 +156,16 @@ const addEntryHandler: RequestHandler = async function(req, res) {
             rows: [
               {
                 values: [
-                  // {
-                  //   userEnteredValue: {
-                  //     // FIXME: date should be a number representing number of days since Dec 30, 1990
-                  //     numberValue: formatDateForSheets(date),
-                  //   },
-                  //   userEnteredFormat: {
-                  //     numberFormat: { type: 'DATE', pattern: 'mm/dd/yyy' },
-                  //     horizontalAlignment: 'RIGHT',
-                  //   },
-                  // },
+                  {
+                    userEnteredValue: {
+                      // FIXME: date should be a number representing number of days since Dec 30, 1990
+                      numberValue: formatDateForSheets(date),
+                    },
+                    userEnteredFormat: {
+                      numberFormat: { type: 'DATE', pattern: 'mm/dd/yyy' },
+                      horizontalAlignment: 'RIGHT',
+                    },
+                  },
                   {
                     userEnteredValue: {
                       stringValue: name,
@@ -182,16 +182,16 @@ const addEntryHandler: RequestHandler = async function(req, res) {
                       horizontalAlignment: 'RIGHT',
                     },
                   },
-                  // {
-                  //   userEnteredValue: {
-                  //     // FIXME: amount should be number
-                  //     numberValue: amount,
-                  //   },
-                  //   userEnteredFormat: {
-                  //     numberFormat: { type: 'NUMBER', pattern: '####.00' },
-                  //     horizontalAlignment: 'RIGHT',
-                  //   },
-                  // },
+                  {
+                    userEnteredValue: {
+                      // FIXME: amount should be number
+                      numberValue: amount,
+                    },
+                    userEnteredFormat: {
+                      numberFormat: { type: 'NUMBER', pattern: '####.00' },
+                      horizontalAlignment: 'RIGHT',
+                    },
+                  },
                 ],
               },
             ],

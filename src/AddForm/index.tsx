@@ -109,6 +109,11 @@ function reducer(state: AddFormState, action: AddFormAction): AddFormState {
         ...state,
         loading: false,
         initialized: true,
+        form: {
+          name: '',
+          amount: '',
+          category: '',
+        },
       };
   }
 }
@@ -177,6 +182,7 @@ const AddForm = () => {
           type="text"
           name="amount"
           value={form.amount}
+          pattern="\d*(\.\d\d)?"
           onChange={inputHandler}
         />
       </div>

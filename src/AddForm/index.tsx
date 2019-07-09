@@ -179,7 +179,7 @@ const AddForm = () => {
       <div>
         <label htmlFor="amount">Amount</label>
         <input
-          type="text"
+          type="number"
           name="amount"
           value={form.amount}
           pattern="\d*(\.\d\d)?"

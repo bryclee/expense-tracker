@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 const buildLog = function(req: Request): string {
-  return `[${req.method}: ${req.originalUrl}]`;
+  return `[${req.ip}->${req.method}:${req.originalUrl}]`;
 };
 
 export default {

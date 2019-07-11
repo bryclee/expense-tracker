@@ -157,6 +157,7 @@ const AddForm = () => {
           name="name"
           value={form.name}
           onChange={inputHandler}
+          required
         />
       </div>
       <div>
@@ -184,6 +185,7 @@ const AddForm = () => {
           value={form.amount}
           pattern="\d*(\.\d\d)?"
           onChange={inputHandler}
+          required
         />
       </div>
       <div>

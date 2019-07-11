@@ -1,11 +1,17 @@
+import { Request } from 'express';
+
+const buildLog = function(req: Request): string {
+  return `[${req.method}: ${req.originalUrl}]`;
+};
+
 export default {
-  info(...args: any[]) {
-    console.log(...args);
+  info(req: Request, ...args: any[]) {
+    console.log(buildLog(req), ...args);
   },
-  warn(...args: any[]) {
-    console.warn(...args);
+  warn(req: Request, ...args: any[]) {
+    console.warn(buildLog(req), ...args);
   },
-  error(...args: any[]) {
-    console.error(...args);
+  error(req: Request, ...args: any[]) {
+    console.error(buildLog(req), ...args);
   },
 };

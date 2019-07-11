@@ -1,8 +1,8 @@
 import express, { RequestHandler, Request } from 'express';
 import { google, sheets_v4 } from 'googleapis';
 import { getCredentials } from '../env';
-import asyncMiddleware from '../lib/asyncMiddleware';
 import { formatDateForSheets } from '../lib/google';
+import { asyncMiddleware, validateRequestMiddleware } from './helpers';
 
 const EXPENSE_TRACKER_SHEET_NAME = 'Hello Expense Tracker';
 
@@ -158,7 +158,6 @@ const addEntryHandler: RequestHandler = async function(req, res) {
                 values: [
                   {
                     userEnteredValue: {
-                      // FIXME: date should be a number representing number of days since Dec 30, 1990
                       numberValue: formatDateForSheets(date),
                     },
                     userEnteredFormat: {
@@ -184,7 +183,6 @@ const addEntryHandler: RequestHandler = async function(req, res) {
                   },
                   {
                     userEnteredValue: {
-                      // FIXME: amount should be number
                       numberValue: amount,
                     },
                     userEnteredFormat: {
@@ -217,6 +215,47 @@ export function spreadsheetsApi() {
   );
   router.post(
     '/spreadsheets/:spreadsheetId/entries',
+    validateRequestMiddleware({
+      type: 'object',
+      properties: {
+        params: {
+          type: 'object',
+          properties: {
+            spreadsheetId: {
+              type: 'string',
+              minLength: 1,
+            },
+          },
+          required: ['spreadsheetId'],
+        },
+        body: {
+          type: 'object',
+          properties: {
+            date: {
+              oneOf: [
+                { type: 'number' },
+                {
+                  type: 'string',
+                  minLength: 1,
+                },
+              ],
+            },
+            name: {
+              type: 'string',
+              minLength: 1,
+            },
+            amount: {
+              type: 'number',
+            },
+            category: {
+              type: 'string',
+              minLength: 1,
+            },
+          },
+          required: ['date', 'name', 'amount', 'category'],
+        },
+      },
+    }),
     asyncMiddleware(addEntryHandler),
   );
 

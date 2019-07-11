@@ -11,19 +11,17 @@ const isProd = process.env.NODE_ENV === 'production';
 // import { googleRedirectMiddleware } from './auth';
 
 const requestLogger: RequestHandler = function(req, _res, next) {
-  logger.info(`[Request: ${req.method} -> ${req.originalUrl}]`);
+  logger.info(req);
   next();
 };
 
 const notFoundHandler: RequestHandler = function(req, res) {
-  logger.warn(`[404: ${req.originalUrl}]`);
+  logger.warn(req, '404');
   res.status(404).send(404);
 };
 
 const errorHandler: ErrorRequestHandler = function(err, req, res) {
-  logger.error(
-    `[500: ${req.originalUrl}] Request failed with ${err.toString()}`,
-  );
+  logger.error(req, `500: Request failed with ${err.toString()}`);
   res.status(500).send('Error');
 };
 

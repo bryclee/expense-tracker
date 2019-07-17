@@ -2,12 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "skipLibCheck": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
@@ -17,12 +12,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "skipLibCheck": true
   },
-  "include": [
-    "src",
-    "shared",
-    "server",
-    "interfaces.d.ts"
-  ]
+  "include": ["src", "shared", "server", "interfaces.d.ts"],
+  "exclude": ["src/service-worker"]
 }

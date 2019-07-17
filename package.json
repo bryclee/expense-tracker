@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.2.0",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
     "dotenv": "^8.0.0",
@@ -11,12 +12,14 @@
     "jsonschema": "^1.2.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "rollup-plugin-typescript": "^1.0.1"
   },
   "scripts": {
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:client && npm run build:server && npm run build:sw",
     "build:client": "react-scripts build",
     "build:server": "tsc --project tsconfig.server.json",
+    "build:sw": "rollup -c sw.rollup.config.js",
     "client": "PORT=${PORT:-$CLIENT_PORT} react-scripts start",
     "dev": "SERVER_PORT=8001 CLIENT_PORT=8000 concurrently -n client,server -i --default-input-target server -c green,blue --kill-others-on-fail \"npm run client\" \"npm run server\"",
     "eject": "react-scripts eject",
@@ -48,8 +51,13 @@
     "husky": "^2.4.1",
     "lint-staged": "^8.2.1",
     "nodemon": "^1.18.11",
+    "rollup": "^1.16.7",
     "ts-node": "^8.1.0",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.1",
+    "workbox-background-sync": "^4.3.1",
+    "workbox-expiration": "^4.3.1",
+    "workbox-routing": "^4.3.1",
+    "workbox-strategies": "^4.3.1"
   },
   "prettier": {
     "tabWidth": 2,

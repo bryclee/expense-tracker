@@ -33,3 +33,6 @@
 - [ ] Source `.serverenv` for dev mode only
 - [ ] Styling
 - [ ] Service worker for offline
+- [ ] Refactor typescript to use projects references
+  - [Project references docs](https://www.typescriptlang.org/docs/handbook/project-references.html)
+  - [Example with service worker](https://stackoverflow.com/questions/56356655/structuring-a-typescript-project-with-workers/56374158#56374158)

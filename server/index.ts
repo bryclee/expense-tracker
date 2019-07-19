@@ -1,8 +1,8 @@
 import { app } from './app';
 
-if (process.env.NODE_ENV === 'development') {
-  require('dotenv').config({ path: '.serverenv' });
-}
+// if (process.env.NODE_ENV === 'development') {
+require('dotenv').config({ path: `.serverenv` });
+// }
 
 const PORT = process.env.PORT || 8000;
 const server = app.listen(PORT, () => {

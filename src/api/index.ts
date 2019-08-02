@@ -1,14 +1,17 @@
 import { GOOGLE_AT_HEADER, GOOGLE_AUTH_HEADER } from '../constants';
 import { ApiError } from './ApiError';
+import { getDb } from './db';
 
 interface ApiContext {
   accessToken?: string;
   idToken?: string;
+  userId?: string;
 }
 
 let apiContext: ApiContext = {
   accessToken: null,
   idToken: null,
+  userId: null,
 };
 
 /**
@@ -70,6 +73,15 @@ export async function getSpreadsheets(): Promise<Spreadsheet[]> {
   return requestToServer<Spreadsheet[]>(`/api/spreadsheets`);
 }
 
+/**
+ * Returns the primary spreadsheet ID to be used for the user
+ */
+export async function getSpreadsheetId(): Promise<string> {
+  const spreadsheets = await getSpreadsheets();
+
+  return spreadsheets[0].id;
+}
+
 export async function getEntries(id: string): Promise<Entry[]> {
   return requestToServer<Entry[]>(`/api/spreadsheets/${id}/entries`);
 }
@@ -78,6 +90,7 @@ export async function addEntry(
   id: string,
   payload: AddEntryPayload,
 ): Promise<void> {
+  await getDb();
   return requestToServer<void>(`/api/spreadsheets/${id}/entries`, {
     method: 'POST',
     body: JSON.stringify(payload),

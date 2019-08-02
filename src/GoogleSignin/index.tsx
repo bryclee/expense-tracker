@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import cn from 'classnames';
 import styles from './index.module.css';
 
-export interface AuthState {
-  loggedIn: boolean;
-  idToken?: string;
-  accessToken?: string;
-}
+export type AuthState =
+  | {
+      loggedIn: false;
+    }
+  | {
+      loggedIn: true;
+      idToken: string;
+      accessToken: string;
+      userId: string;
+    };
 
 function renderGoogleSignin(ref: HTMLElement) {
   return new Promise((resolve, reject) => {
@@ -24,21 +29,21 @@ function listenForAuthChanges(cb: () => void) {
 }
 
 function getGoogleAuthState(): AuthState {
-  const authResponse = gapi.auth2
-    .getAuthInstance()
-    .currentUser.get()
-    .getAuthResponse(true);
+  const currentUser = gapi.auth2.getAuthInstance().currentUser.get();
+  const authResponse = currentUser.getAuthResponse(true);
   const loggedIn = Boolean(authResponse);
 
-  if (!loggedIn) return { loggedIn };
+  if (!loggedIn) return { loggedIn: false };
 
   const idToken = authResponse.id_token;
   const accessToken = authResponse.access_token;
+  const userId = currentUser.getBasicProfile().getId();
 
   return {
-    loggedIn,
+    loggedIn: true,
     idToken,
     accessToken,
+    userId,
   };
 }
 

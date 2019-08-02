@@ -35,6 +35,8 @@ function mapEntry({ id, name, date, category, amount }: Entry): EntryDisplay {
   };
 }
 
+const Loading = () => <div>Loading...</div>;
+
 const Entries = () => {
   const [entries, setEntries] = useState<EntryDisplay[]>([]);
   const [loading, setLoading] = useState<Boolean>(true);
@@ -63,7 +65,7 @@ const Entries = () => {
     };
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <table>

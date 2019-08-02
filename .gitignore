@@ -1,8 +1,1 @@
 node_modules/
-# For server files
-.build/
-# For client files
-build/
-client_id.json
-.env
-.serverenv

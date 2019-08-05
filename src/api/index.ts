@@ -1,14 +1,23 @@
 import { GOOGLE_AT_HEADER, GOOGLE_AUTH_HEADER } from '../constants';
 import { ApiError } from './ApiError';
+import {
+  getDb,
+  readSpreadsheetId,
+  writeSpreadsheetId,
+  readEntries,
+  writeEntries,
+} from './db';
 
 interface ApiContext {
   accessToken?: string;
   idToken?: string;
+  userId?: string;
 }
 
 let apiContext: ApiContext = {
   accessToken: null,
   idToken: null,
+  userId: null,
 };
 
 /**
@@ -70,8 +79,44 @@ export async function getSpreadsheets(): Promise<Spreadsheet[]> {
   return requestToServer<Spreadsheet[]>(`/api/spreadsheets`);
 }
 
-export async function getEntries(id: string): Promise<Entry[]> {
+/**
+ * Returns the primary spreadsheet ID to be used for the user
+ */
+export async function _getSpreadsheetId(): Promise<string> {
+  const spreadsheets = await getSpreadsheets();
+
+  return spreadsheets[0].id;
+}
+
+export async function getSpreadsheetId(): Promise<string> {
+  const db = await getDb();
+  let spreadsheetId = await readSpreadsheetId(db);
+
+  if (!spreadsheetId) {
+    spreadsheetId = await _getSpreadsheetId();
+
+    await writeSpreadsheetId(db, spreadsheetId);
+  }
+
+  return spreadsheetId;
+}
+
+export async function _getEntries(id: string): Promise<Entry[]> {
   return requestToServer<Entry[]>(`/api/spreadsheets/${id}/entries`);
+}
+
+export async function getEntries(id: string): Promise<Entry[]> {
+  const db = await getDb();
+  debugger;
+  let entries = await readEntries(db);
+
+  if (!entries.length) {
+    entries = await _getEntries(id);
+
+    await writeEntries(db, entries);
+  }
+
+  return entries;
 }
 
 export async function addEntry(

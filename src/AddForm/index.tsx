@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { addEntry, getSpreadsheets } from '../api';
+import { addEntry, getSpreadsheetId } from '../api';
 
 type FormFields = {
   name: string;
@@ -14,7 +14,7 @@ export type AddFormState = {
   form: FormFields;
 };
 
-const initialState = {
+const initialState: AddFormState = {
   loading: true,
   initialized: false,
   spreadsheetId: '',
@@ -39,8 +39,8 @@ function actionHandler(
     switch (action.type) {
       case 'INIT_FORM':
         dispatch(action);
-        getSpreadsheets().then(result => {
-          dispatch({ type: 'INIT_FORM_SUCCESS', spreadsheetId: result[0].id });
+        getSpreadsheetId().then(id => {
+          dispatch({ type: 'INIT_FORM_SUCCESS', spreadsheetId: id });
         });
         break;
       case 'USER_INPUT':
@@ -118,6 +118,8 @@ function reducer(state: AddFormState, action: AddFormAction): AddFormState {
   }
 }
 
+const Loading = () => <div>Loading...</div>;
+
 const AddForm = () => {
   const [{ loading, initialized, spreadsheetId, form }, dispatch] = useReducer(
     reducer,
@@ -144,7 +146,7 @@ const AddForm = () => {
   };
 
   if (loading && !initialized) {
-    return <div>...loading</div>;
+    return <Loading />;
   }
 
   return (

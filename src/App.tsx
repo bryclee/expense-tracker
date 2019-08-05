@@ -21,7 +21,11 @@ const App = () => {
     updateAppState({ auth, page: appState.page });
     setApiContext(
       auth.loggedIn
-        ? { accessToken: auth.accessToken, idToken: auth.idToken }
+        ? {
+            accessToken: auth.accessToken,
+            idToken: auth.idToken,
+            userId: auth.userId,
+          }
         : null,
     );
   };

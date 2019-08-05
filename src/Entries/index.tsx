@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.module.css';
-import { getEntries, getSpreadsheets } from '../api';
+import { getEntries, getSpreadsheetId } from '../api';
 
 async function loadEntriesForUser() {
   let entries = [];
 
   try {
-    const spreadsheets = await getSpreadsheets();
+    const spreadsheetId = await getSpreadsheetId();
 
-    entries = await getEntries(spreadsheets[0].id);
+    entries = await getEntries(spreadsheetId);
   } catch (err) {
     console.log('Error from loadEntriesForUser:', err);
     throw err;
@@ -34,6 +34,8 @@ function mapEntry({ id, name, date, category, amount }: Entry): EntryDisplay {
     amount,
   };
 }
+
+const Loading = () => <div>Loading...</div>;
 
 const Entries = () => {
   const [entries, setEntries] = useState<EntryDisplay[]>([]);
@@ -63,7 +65,7 @@ const Entries = () => {
     };
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <table>

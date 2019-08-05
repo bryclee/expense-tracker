@@ -52,6 +52,8 @@ export function register(config) {
         registerValidSW(swUrl, config);
       }
     });
+  } else {
+    unregister();
   }
 }
 

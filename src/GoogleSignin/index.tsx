@@ -71,8 +71,8 @@ const GoogleSignin = ({ updateAuth = () => {} }: GoogleSigninProps) => {
   }, [gapiLoaded]);
 
   // gapiLoaded is a promise initialized in public/index.html file
-  if (!gapiLoaded && gapiScriptLoaded && gapiScriptLoaded.then) {
-    gapiScriptLoaded.then(() => setGapiLoaded(true));
+  if (!gapiLoaded && window.gapiScriptLoaded && window.gapiScriptLoaded.then) {
+    window.gapiScriptLoaded.then(() => setGapiLoaded(true));
   } else if (!gapiLoaded) {
     // TODO: some more elaborate error handling if google auth doesn't load
     return <div style={{ color: 'red' }}>Google Auth failed to load</div>;

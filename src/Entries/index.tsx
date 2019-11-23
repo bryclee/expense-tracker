@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styles from './index.module.css';
 import { getEntries, getSpreadsheets } from '../api';
+import { EntriesList, EntryDisplay } from './EntriesList';
 
 async function loadEntriesForUser() {
   let entries = [];
@@ -17,14 +17,6 @@ async function loadEntriesForUser() {
   return entries;
 }
 
-type EntryDisplay = {
-  id: string;
-  name: string;
-  date: string;
-  category: string;
-  amount: string;
-};
-
 function mapEntry({ id, name, date, category, amount }: Entry): EntryDisplay {
   return {
     id,
@@ -34,6 +26,8 @@ function mapEntry({ id, name, date, category, amount }: Entry): EntryDisplay {
     amount,
   };
 }
+
+const Loading = () => <div>Loading...</div>;
 
 const Entries = () => {
   const [entries, setEntries] = useState<EntryDisplay[]>([]);
@@ -45,7 +39,6 @@ const Entries = () => {
     loadEntriesForUser()
       .then(entries => {
         if (mounted) {
-          setLoading(false);
           setEntries(entries.map(mapEntry));
         }
       })
@@ -63,30 +56,9 @@ const Entries = () => {
     };
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
-  return (
-    <table>
-      <thead>
-        <tr>
-          <td>Date</td>
-          <td>Name</td>
-          <td>Category</td>
-          <td>Amount</td>
-        </tr>
-      </thead>
-      <tbody>
-        {entries.map(entry => (
-          <tr key={entry.id} className={styles.entry}>
-            <td className={styles.date}>{entry.date}</td>
-            <td className={styles.name}>{entry.name}</td>
-            <td className={styles.category}>{entry.category}</td>
-            <td className={styles.amount}>{entry.amount}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  return <EntriesList entries={entries} />;
 };
 
 export default Entries;

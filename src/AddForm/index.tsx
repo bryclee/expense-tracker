@@ -64,6 +64,8 @@ function actionHandler(
         }).then(() => {
           dispatch({ type: 'SUBMIT_SUCCESS' });
         });
+
+        break;
       }
       default:
         dispatch(action);
@@ -118,6 +120,8 @@ function reducer(state: AddFormState, action: AddFormAction): AddFormState {
   }
 }
 
+const Loading = () => <div>Loading...</div>;
+
 const AddForm = () => {
   const [{ loading, initialized, spreadsheetId, form }, dispatch] = useReducer(
     reducer,
@@ -129,7 +133,9 @@ const AddForm = () => {
     actionDispatcher({ type: 'INIT_FORM' });
   }, []);
 
-  const inputHandler = event => {
+  const inputHandler = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     event.preventDefault();
     actionDispatcher({
       type: 'USER_INPUT',
@@ -138,13 +144,13 @@ const AddForm = () => {
     });
   };
 
-  const submitHandler = event => {
+  const submitHandler = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     actionDispatcher({ type: 'SUBMIT_FORM', spreadsheetId, form });
   };
 
   if (loading && !initialized) {
-    return <div>...loading</div>;
+    return <Loading />;
   }
 
   return (

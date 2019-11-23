@@ -1,1 +1,3 @@
-declare var gapiScriptLoaded: Promise<void>;
+declare interface Window {
+  gapiScriptLoaded: Promise<void>;
+}

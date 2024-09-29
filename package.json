@@ -52,7 +52,7 @@
     "husky": "^2.4.1",
     "lint-staged": "^8.2.1",
     "nodemon": "^1.18.11",
-    "rollup": "^1.16.7",
+    "rollup": "^2.79.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.1.1",
